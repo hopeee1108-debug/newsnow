@@ -9,10 +9,15 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync upstream
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+      - uses: actions/checkout@v4
         with:
-          upstream_sync_repo: ourongxing/newsnow
-          upstream_sync_branch: main
-          target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream
+        run: |
+          git remote add upstream https://github.com/ourongxing/newsnow.git
+          git fetch upstream
+          git checkout main
+          git merge upstream/main --allow-unrelated-histories
+          git push origin main
